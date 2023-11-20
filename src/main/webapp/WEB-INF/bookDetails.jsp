@@ -67,10 +67,10 @@
                             <h5 style="margin-bottom: 0;">
                                 <a href="/books/${book.id}/edit" class="btn btn-success">Edit</a>
                             </h5>
-                            <form action="/books/<c:out value="${book.id}"/>/delete" method="POST" style="display:flex; align-items:center">
-                                <input type="hidden" name="_method" value="delete"> <!--important, permet de use le 'delete' avc method="POST"-->
-                                <button type="submit" class="btn btn-danger">Delete</button>
-                          </form>
+                             <!--otr method avc un simple requestmapping ou getmapping-->
+                             <h5 style="margin-bottom: 0;">
+                                <a href="/books/${book.id}/delete" class="btn btn-danger">delete</a>
+                            </h5>            
                         </div>
                     </c:if>
                 </div>

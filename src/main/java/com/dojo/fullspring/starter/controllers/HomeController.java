@@ -40,7 +40,7 @@ public class HomeController {
     public String register(Model model, 
                            HttpSession session) {
         
-        if (session.getAttribute("userId")!= null){ // add
+        if (session.getAttribute("userId")!= null){ 
             return "redirect:/books";
         }
         
@@ -53,7 +53,7 @@ public class HomeController {
     @GetMapping("/login")
     public String login(Model model, HttpSession session) {
         
-        if (session.getAttribute("userId")!= null){  //add
+        if (session.getAttribute("userId")!= null){  
             return "redirect:/books";
         }
         // Bind empty User and LoginUser objects to the JSP
@@ -72,7 +72,7 @@ public class HomeController {
         // TO-DO Later -- call a register method in the service 
         // to do some extra validations and create a new user!
 
-        User registeredUser = userServ.register(newUser, result);  // add
+        User registeredUser = userServ.register(newUser, result);  
         
         if(result.hasErrors()) {
             // Be sure to send in the empty LoginUser before 

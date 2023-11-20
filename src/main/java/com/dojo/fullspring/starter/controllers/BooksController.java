@@ -35,18 +35,22 @@ public class BooksController {
 
 
     // home, all books 
-    @GetMapping ("/books")
-    public String home(Model model, HttpSession session){
-    	if (session.getAttribute("userId")!= null){
-    		Long userId = (Long) session.getAttribute("userId");
-    		User currentUser = userService.findUserById(userId);
-    		model.addAttribute("currentUser", currentUser);
-    		
-        	List<Books> allBooks = bookService.allBooks();
-        	model.addAttribute("allBooks", allBooks);
-    		return "home.jsp";
-    	}
-    	return "redirect:/";
+    @RequestMapping ("/books")
+    public String home(Model model, 
+                       HttpSession session){
+
+    	if(session.getAttribute("userId") == null) {
+            return "redirect:/";
+        }
+
+        Long userId = (Long) session.getAttribute("userId");
+        User currentUser = userService.findUserById(userId);
+        model.addAttribute("currentUser", currentUser);
+        
+        List<Books> allBooks = bookService.allBooks();
+        model.addAttribute("allBooks", allBooks);
+
+        return "home.jsp";
     	  		
     }
 
@@ -56,12 +60,18 @@ public class BooksController {
     public String showBook(Model model, 
                            @PathVariable("id") Long id, 
                            HttpSession session) {
+
+		if(session.getAttribute("userId") == null) {
+            return "redirect:/";
+        }
+                            
 		Long userId = (Long) session.getAttribute("userId");
 		User currentUser = userService.findUserById(userId);
 		model.addAttribute("currentUser", currentUser);
 		
         Books book = bookService.findBook(id);
         model.addAttribute("book", book);
+
         return "bookDetails.jsp";
     }
 
@@ -70,26 +80,30 @@ public class BooksController {
     // form page / create new book
     @RequestMapping("/book/new")
     public String create_page(@ModelAttribute("bookAttr") Books book,
-                              Model model) { 
+                              Model model,
+                              HttpSession session) { 
+
+        Long userId = (Long) session.getAttribute("userId");
+		User currentUser = userService.findUserById(userId);
+
+		model.addAttribute("currentUser", currentUser); 
+                                
         return "addBook.jsp";
     }
 
 
     // processing request create new book
     @RequestMapping(value="/process_book", method=RequestMethod.POST)
-    public String create_process(@Valid @ModelAttribute("bookAttr") Books book, 
-                                 BindingResult result,
-                                 Model model,
-                                 HttpSession session) {
+     public String create_process(@Valid @ModelAttribute("bookAttr") Books book, 
+                                 BindingResult result) {
+
         if (result.hasErrors()) {
             return "addBook.jsp";
-        } else {
-            Long id = (Long) session.getAttribute("userId");
-        	User user = userService.findUserById(id);
-    
-            bookService.createBook(book, user);;
-            return "redirect:/books";
-        }
+        } 
+
+        bookService.createBook(book);;
+        return "redirect:/books";
+        
     }
 
 
@@ -97,12 +111,24 @@ public class BooksController {
     
     //Edit book:
     @GetMapping("/books/{id}/edit")
-    public String edit(@PathVariable("id") Long id, 
-                        Model model) {
+     public String edit(@PathVariable("id") Long id, 
+                        Model model,
+                        HttpSession session) {
+        if(session.getAttribute("userId") == null) {
+            return "redirect:/";
+        }
+
+        Long userId = (Long) session.getAttribute("userId");
+		User currentUser = userService.findUserById(userId);
+		model.addAttribute("currentUser", currentUser);
+        
+        
         Books book = bookService.findBook(id); 
         model.addAttribute("bookObj", book);
+
         return "editBook.jsp";
     }
+
     
     //Edit process:
     @RequestMapping(value="/process_update/books/{id}", method=RequestMethod.PUT)  // PUT method
@@ -110,22 +136,36 @@ public class BooksController {
                           BindingResult result,
                           HttpSession session,
                           Model model) {
+
+        if(session.getAttribute("userId") == null) {
+            return "redirect:/";
+        }        
+
         if (result.hasErrors()) {
             model.addAttribute("bookObj", book);
             return "editBook.jsp";
-        } else {
-        	Long id = (Long) session.getAttribute("userId");
-        	User user = userService.findUserById(id);
-            bookService.updateBook(book, user); 
-            return "redirect:/books";
-        }
+        } 
+
+        bookService.updateBook(book); 
+
+        return "redirect:/books";
+        
     }
 
-      // processing request deleted specific books
-      @RequestMapping(value="/books/{id}/delete", method=RequestMethod.DELETE)
-      public String destroy(@PathVariable("id") Long id) {
-          bookService.deleteBook(id);
-          return "redirect:/books";
+       // processing request deleted specific books
+       
+      //sans le form
+      @RequestMapping("/books/{id}/delete")
+      public String destroy(@PathVariable("id") Long id,
+                            HttpSession session) {
+
+        if(session.getAttribute("userId") == null) {
+    		return "redirect:/";
+    	}
+
+        bookService.deleteBook(id);
+
+        return "redirect:/books";
       }
 
 

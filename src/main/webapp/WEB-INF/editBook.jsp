@@ -28,10 +28,8 @@
             </div>
             <div class="container-fluid text-center p-5" style="justify-content: center;width: 50%;">
                <div class="omikuji border-1">
-                        <form:form action="/process_update/books/${bookObj.id}" method="POST" modelAttribute="bookObj" class="form_this">
+                        <form:form action="/process_update/books/${bookObj.id}" method="PUT" modelAttribute="bookObj" class="form_this">
                                  
-                            <input type="hidden" name="_method" value="put"> <!--important !-->
-                          
                             <div class="form-group">
                                 <form:label path="title">Title : </form:label>
                                 <form:errors path="title"/>
@@ -47,6 +45,12 @@
                                 <form:errors path="thoughts"/>
                                 <form:textarea class="form-control" rows="3" path="thoughts"/> 
                             </div>
+                            <!--important-->
+                            <div class="form-row">
+                                <form:errors path="user" class="error"/>
+                                <form:input type="hidden" path="user" value="${currentUser.id}" class="form-control"/>
+                            </div>
+                            
                             <button type="submit" class="btn btn-primary my-2">Submit</button>
                         </form:form>
                 </div> 

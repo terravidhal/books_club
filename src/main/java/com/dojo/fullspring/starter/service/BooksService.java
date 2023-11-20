@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.stereotype.Service;
 
 import com.dojo.fullspring.starter.models.Books;
-import com.dojo.fullspring.starter.models.User;
 import com.dojo.fullspring.starter.repositories.BooksRepository;
 
 
@@ -38,17 +37,16 @@ public class BooksService {
      }
      
 
-     // creates a Book (one to many for session)
-     public Books createBook(Books b, User user) {
-         b.setUser(user);
+     // creates a Book 
+     public Books createBook(Books b) {
          return bookRepository.save(b);
      }
 
-     // update (one to many for session)
-	public Books updateBook(Books b, User user) {
-        b.setUser(user);
+     // update 
+	public Books updateBook(Books b) {
 		return bookRepository.save(b);
 	}
+
 	//delete
 	public void deleteBook(Long id) {
 		Optional<Books> optionalBook = bookRepository.findById(id);

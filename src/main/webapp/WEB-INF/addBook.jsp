@@ -44,6 +44,12 @@
                                 <form:errors path="thoughts"/>
                                 <form:textarea class="form-control" rows="3" path="thoughts"/> 
                             </div>
+                             <!--important-->
+                             <div class="form-group">
+                                <form:errors path="user" class="error"/>
+                                <form:input type="hidden" path="user" value="${currentUser.id}" class="form-control"/>
+                            </div>
+                            
                             <button type="submit" class="btn btn-primary my-2">Submit</button>
                         </form:form>
                 </div> 
